@@ -8,7 +8,7 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  int _selectedIndex = 0; // Seçili sekmeyi takip et
+  int _selectedIndex = 0;
 
   // Google Maps Controller
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
@@ -30,29 +30,29 @@ class _MainMenuState extends State<MainMenu> {
     await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 
-  // Sekme içerikleri
   Widget _getBodyContent() {
-    switch (_selectedIndex) {
-      case 0:
-        return const Center(child: Text('Ana Sayfa'));
-      case 1:
-        return GoogleMap(
-          mapType: MapType.hybrid,
-          initialCameraPosition: _kGooglePlex,
-          onMapCreated: (GoogleMapController controller) {
+    if (_selectedIndex == 1) {
+      return GoogleMap(
+        mapType: MapType.hybrid,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          if (!_controller.isCompleted) {
             _controller.complete(controller);
-          },
-        );
-      case 2:
-        return const Center(child: Text('Profil'));
-      default:
-        return const Center(child: Text('Bilinmeyen Sekme'));
+          }
+        },
+      );
     }
+    return Center(
+      child: Text(
+        _selectedIndex == 0 ? 'Ana Sayfa' : 'Profil',
+        style: const TextStyle(fontSize: 24),
+      ),
+    );
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Seçili sekmeyi güncelle
+      _selectedIndex = index;
     });
   }
 
@@ -113,31 +113,32 @@ class _MainMenuState extends State<MainMenu> {
         ),
       ),
       body: _getBodyContent(),
-      floatingActionButton: _selectedIndex == 1
-          ? FloatingActionButton.extended(
-              onPressed: _goToTheLake,
-              label: const Text('To the lake!'),
-              icon: const Icon(Icons.directions_boat),
-            )
-          : null,
+      floatingActionButton: FloatingActionButton.large(
+        shape: const CircleBorder(),
+        onPressed: _selectedIndex == 1 ? _goToTheLake : null,
+        child: const Icon(Icons.camera_alt),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Ana Sayfa',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Harita',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+      bottomNavigationBar: BottomAppBar(
+        color: const Color.fromRGBO(82, 170, 94, 1.0),
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              onPressed: () {
+                _onItemTapped(1); // Harita sekmesini göster
+              },
+              icon: const Icon(Icons.map, color: Color.fromRGBO(43, 217, 254, 1.0)),
+            ),
+            IconButton(
+              onPressed: () {
+                _onItemTapped(0); // Ana sayfa sekmesini göster
+              },
+              icon: const Icon(Icons.home, color: Colors.blue),
+            ),
+          ],
+        ),
       ),
     );
   }
