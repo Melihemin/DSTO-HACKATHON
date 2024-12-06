@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'main_menu.dart'; // MainMenu sınıfını içe aktar
+import 'main_menu.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(), // Giriş sayfasını ayarla
+      home: LoginPage(),
     );
   }
 }
@@ -30,7 +31,7 @@ class LoginPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MainMenu()), // Ana menüye geçiş
+              MaterialPageRoute(builder: (context) => MainMenu()),
             );
           },
           child: const Text('Giriş Yap'),
