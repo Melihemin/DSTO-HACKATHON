@@ -6,7 +6,7 @@ allprojects {
 }
 
 buildscript {
-    ext.kotlin_version = '1.7.10' // Kotlin sürümünü güncelleyin
+    ext.kotlin_version = '1.7.10' // Sürümü güncelleyin
     repositories {
         google()
         mavenCentral()
